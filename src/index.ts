@@ -25,7 +25,3 @@ exports.refreshToken = functions.https.onRequest((req: any, resp: any) =>
 exports.revokeRefreshTokens = functions.https.onRequest((req: any, resp: any) =>
   revokeRefreshTokens(req, resp, null),
 );
-
-exports.summarize = functions.https.onRequest((req: any, resp: any) =>
-  summarize({body}, resp, null),
-);

@@ -13,10 +13,10 @@ function getUserID(email: string, machineIdentifier: string) {
 export function createOfflineToken(email: string) {
   const data = email;
   const signer = require("crypto").createSign("rsa-sha256");
-  if (!process.env.HURD_PRIVATE_KEY) {
-    throw new Error("HURD_PRIVATE_KEY config invalid");
+  if (!process.env.PRIVATE_KEY) {
+    throw new Error("PRIVATE_KEY config invalid");
   }
-  const signature = signer.sign(process.env.HURD_PRIVATE_KEY, "hex");
+  const signature = signer.sign(process.env.PRIVATE_KEY, "hex");
   // // Combine the encoded data and signature to create a license key
   return `${Buffer.from(data).toString("base64")}.${signature}`;
 }

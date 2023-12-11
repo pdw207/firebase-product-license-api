@@ -1,6 +1,6 @@
 import {Timestamp} from "firebase-admin/firestore";
 import {info} from "firebase-functions/logger";
-const CONFIRM_EMAIL_URL = "https://hurd.ai/confirm";
+const CONFIRM_EMAIL_URL = process.env.CONFIRM_EMAIL_URL;
 
 export const sendMachineAddedEmail = (
   email: string,

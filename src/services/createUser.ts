@@ -5,6 +5,7 @@ import {trackEvent} from "./utils/base";
 import sendMessageToSlack from "../services/sendMessageToSlack";
 import {createWelcomeEmail} from "./utils/createLicenseKeyUtils";
 const Sentry = require("@sentry/serverless");
+
 export default async function createUser(req: any, resp: any) {
   try {
     const {
@@ -17,15 +18,18 @@ export default async function createUser(req: any, resp: any) {
 
     if (!email || !name) {
       error("Email and name required");
-      resp.set("Location", "https://hurd.ai/beta");
+      resp.set("Location", process.env.REDIRECT_OPEN_URL);
       resp.status(302).send({error: "Error creating user"});
       return;
     }
-    const hurdRef = admin.firestore().collection("config").doc("hurd");
-    const configSnapShot = await hurdRef.get();
+    const appRef = admin
+      .firestore()
+      .collection("config")
+      .doc(process.env.DOC_NAME || "App");
+    const configSnapShot = await appRef.get();
     const configData = configSnapShot.data();
     if (configData?.status !== "OPEN") {
-      resp.set("Location", "https://hurd.ai/beta-closed");
+      resp.set("Location", process.env.REDIRECT_CLOSED_URL);
       resp.status(302).send();
       return;
     }
@@ -44,7 +48,7 @@ export default async function createUser(req: any, resp: any) {
         const doc = querySnapshot.docs[0];
         await createWelcomeEmail(admin.firestore(), doc.id, email);
       }
-      resp.set("Location", "https://hurd.ai/beta");
+      resp.set("Location", process.env.REDIRECT_OPEN_URL);
       resp.status(302).send({error: "Error creating user"});
       return;
     } else {
@@ -59,7 +63,6 @@ export default async function createUser(req: any, resp: any) {
     await createLicense({email});
     trackEvent("user_created", {}, email);
 
-    // Slack failure should not prevent user from being redirected
     try {
       await sendMessageToSlack(email, {
         Referral: referral,
@@ -70,11 +73,11 @@ export default async function createUser(req: any, resp: any) {
       Sentry.captureException(error);
     }
 
-    resp.set("Location", "https://hurd.ai/beta-download");
+    resp.set("Location", process.env.REDIRECT_SUCCESS_URL);
     resp.status(302).send();
   } catch (error) {
     Sentry.captureException(error);
-    resp.set("Location", "https://hurd.ai/beta");
+    resp.set("Location", process.env.REDIRECT_OPEN_URL);
     resp.status(302).send({error: "Error creating user"});
   }
 }

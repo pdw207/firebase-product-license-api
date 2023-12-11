@@ -6,7 +6,7 @@ export default function initializeApp() {
   if (process.env.DEV === "true") {
     console.log("process.env.DEV true, serving local firestore DB");
     admin.initializeApp({
-      projectId: "hurd-46ce3",
+      projectId: process.env.PROJECT_ID,
       credential: admin.credential.applicationDefault(),
       databaseURL: "localhost:8080",
     });
