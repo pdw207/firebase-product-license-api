@@ -1,0 +1,32 @@
+# Dependency directories
+node_modules/
+bower_components/
+
+# Firebase generated files
+.firebase/
+.firebaserc
+firebase-*.json
+
+
+# Local `.env` files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Security and credentials
+*.pem
+*.key
+service-account.json
+
+# IDE
+.vscode/
+*.swp
+*.swo
+
+# System Files
+.DS_Store
+
+# Typescript Build Files
+lib/
