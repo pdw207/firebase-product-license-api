@@ -1,8 +1,7 @@
 import axios from "axios";
 
 // Replace 'YOUR_SLACK_WEBHOOK_URL' with the actual webhook URL provided by Slack.
-const slackWebhookUrl =
-  "https://hooks.slack.com/services/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";
+const slackWebhookUrl = process.env.SLACK_WEBHOOK;
 
 type SlackBody = {
   [key: string]: string;
